@@ -1,0 +1,29 @@
+spring:
+  cloud:
+    azure:
+      storage:
+        blob:
+          account-name: [ffernacustorage]
+          account-key: [tG2O5KwEu/Xoa93o+yssmJ5QjVRmw3Z47ESkngQ0PeXEF2wJGgPL7CyTcwRpJ0B4Vw6BkiJtBw9q+AStFhmJ/Q==]
+          endpoint: [DefaultEndpointsProtocol=https;AccountName=ffernacustorage;AccountKey=tG2O5KwEu/Xoa93o+yssmJ5QjVRmw3Z47ESkngQ0PeXEF2wJGgPL7CyTcwRpJ0B4Vw6BkiJtBw9q+AStFhmJ/Q==;EndpointSuffix=core.windows.net]
+
+aadi:
+  #ONPREMISE APIS PATH
+  esb:
+    api:
+      storage-download:
+        endpoint: /downloadBlobFile/{fileName}
+      read-blob-file:
+        endpoint: /readBlobFile/{fileName}
+  #CLOUD APIS PATH
+  cloud:
+    api:
+      storage:
+        endpoint: https://ffernacustorage.blob.core.windows.net
+        blob:
+          endpoint: https://ffernacustorage.blob.core.windows.net/container-test/
+        container:
+          name: container-test
+
+
+
