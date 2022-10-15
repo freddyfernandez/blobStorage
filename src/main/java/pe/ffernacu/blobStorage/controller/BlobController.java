@@ -1,4 +1,4 @@
-package pe.com.nttdata.blobStorage.controller;
+package pe.ffernacu.blobStorage.controller;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobServiceClient;
@@ -12,6 +12,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.WritableResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class BlobController {
     private String containerName;
     @Value("${aadi.cloud.api.storage.blob.endpoint}")
     private String uriFile;
+    @Value("${aadi.cloud.api.storage.connection-string}")
+    private String myConnectionString;
     @Autowired
     private ResourceLoader resourceLoader;
     private Resource blobFile;
@@ -70,4 +73,15 @@ public class BlobController {
         }
         return "descarga exitosa";
     }
+
+    @PostMapping(path = "${aadi.esb.api.storage-upload.endpoint}")
+    public String UploadFile(@RequestParam("file") MultipartFile file) throws IOException{
+        BlobServiceClient storageClient = new BlobServiceClientBuilder()
+                .endpoint(uriStorage).connectionString(myConnectionString)
+                .buildClient();
+        BlobClient blobClient = storageClient.getBlobContainerClient(this.containerName).getBlobClient(file.getOriginalFilename());//convierte tipo multipart a string
+        blobClient.upload(file.getInputStream(),file.getSize(),true);//si ya existe, se sobreescribe los segmentos modificados
+        return "ok";
+    }
+
 }

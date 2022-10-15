@@ -1,4 +1,4 @@
-package pe.com.nttdata.blobStorage;
+package pe.ffernacu.blobStorage;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
