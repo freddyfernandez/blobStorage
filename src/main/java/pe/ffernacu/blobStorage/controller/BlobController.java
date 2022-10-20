@@ -3,8 +3,10 @@ package pe.ffernacu.blobStorage.controller;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -13,6 +15,8 @@ import org.springframework.core.io.WritableResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pe.ffernacu.blobStorage.model.FileDirectory;
+import pe.ffernacu.blobStorage.service.IFileDirectory;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +38,14 @@ public class BlobController {
     private String uriFile;
     @Value("${aadi.cloud.api.storage.connection-string}")
     private String myConnectionString;
-    @Autowired
     private ResourceLoader resourceLoader;
     private Resource blobFile;
+
+    private final IFileDirectory iFileDirectory;
+
+    public BlobController(IFileDirectory iFileDirectory) {
+        this.iFileDirectory = iFileDirectory;
+    }
 
     @GetMapping(value="${aadi.esb.api.read-blob-file.endpoint}")
     public String readBlobFile(@PathVariable String fileName) throws IOException {
@@ -47,7 +56,7 @@ public class BlobController {
     }
 
     @PostMapping("/writeBlobFile")
-    public String writeBlobFile(@RequestBody String data) throws IOException {
+    public String writeBlobFile(@RequestBody @NotNull String data) throws IOException {
         try (OutputStream os = ((WritableResource) this.blobFile).getOutputStream()) {
             os.write(data.getBytes());
         }
@@ -81,6 +90,7 @@ public class BlobController {
                 .buildClient();
         BlobClient blobClient = storageClient.getBlobContainerClient(this.containerName).getBlobClient(file.getOriginalFilename());//convierte tipo multipart a string
         blobClient.upload(file.getInputStream(),file.getSize(),true);//si ya existe, se sobreescribe los segmentos modificados
+        iFileDirectory.saveFileDirectory(uriFile+file.getOriginalFilename());
         return "ok";
     }
 
