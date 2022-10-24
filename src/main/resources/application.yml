@@ -37,8 +37,6 @@ aadi:
     api:
       storage:
         endpoint: https://ffernacustorage.blob.core.windows.net
-        blob:
-          endpoint: https://ffernacustorage.blob.core.windows.net/container-test/
         container:
           name: container-test
         connection-string: DefaultEndpointsProtocol=https;AccountName=ffernacustorage;AccountKey=tG2O5KwEu/Xoa93o+yssmJ5QjVRmw3Z47ESkngQ0PeXEF2wJGgPL7CyTcwRpJ0B4Vw6BkiJtBw9q+AStFhmJ/Q==;EndpointSuffix=core.windows.net
@@ -48,6 +46,6 @@ commons:
     thread:
       queuecapacity: 0
       corepoolsize: 3
-      maxPoolSize: 10
+      maxPoolSize: 30
 
 
